@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class SearchPage {
-    private final AndroidDriver driver;
+    private final AndroidDriver<MobileElement> driver;
     private By nameLocator=By.id("name");
 
     public SearchPage(AndroidDriver driver){
@@ -19,7 +19,7 @@ public class SearchPage {
     }
 
     public SearchPage search(String keyword){
-        MobileElement el5= (MobileElement) driver.findElementById("com.xueqiu.android:id/search_input_text");
+        MobileElement el5= driver.findElementById("com.xueqiu.android:id/search_input_text");
         el5.sendKeys(keyword);
         return this;
     }
