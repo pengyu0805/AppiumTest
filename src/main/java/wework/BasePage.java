@@ -2,8 +2,10 @@ package wework;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -12,7 +14,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class BasePage {
-    String platfromName;
+    String platformName;
     String deviceName;
     String packageName;
     String activityName;
@@ -21,21 +23,21 @@ public class BasePage {
     //<WebElement> 是Java的泛型使用
     public AppiumDriver<MobileElement> driver;
 
-    public BasePage(String platfromName,String deviceName,String packageName,String activityName){
-        this.platfromName=platfromName;
+    public BasePage(String platformName,String deviceName,String packageName,String activityName){
+        this.platformName=platformName;
         this.deviceName=deviceName;
         this.packageName=packageName;
         this.activityName=activityName;
-        startApp(platfromName,deviceName,packageName,activityName);
+        startApp(platformName,deviceName,packageName,activityName);
     }
 
     public BasePage(AppiumDriver<MobileElement> driver){
         this.driver=driver;
     }
 
-    public void startApp(String platfromName,String deviceName,String packageName,String activityName){
+    public void startApp(String platformName,String deviceName,String packageName,String activityName){
         DesiredCapabilities desiredCapabilities=new DesiredCapabilities();
-        desiredCapabilities.setCapability("platfromName",platfromName);
+        desiredCapabilities.setCapability("platformName",platformName);
         desiredCapabilities.setCapability("deviceName",deviceName);
         desiredCapabilities.setCapability("packageName",packageName);
         desiredCapabilities.setCapability("activityName",activityName);
@@ -49,11 +51,11 @@ public class BasePage {
             e.printStackTrace();
         }
 
-        if(platfromName == "Android"){
+        if(platformName == "Android"){
             driver=new AndroidDriver(desiredCapabilities);
             driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         }
-        else if (platfromName =="Ios"){
+        else if (platformName =="Ios"){
             driver =new IOSDriver<MobileElement>(desiredCapabilities);
             driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
         }
@@ -65,7 +67,7 @@ public class BasePage {
     }
 
     public By byText(String text){
-        //存疑？？？
+
         return By.linkText(text);
     }
 
@@ -87,6 +89,20 @@ public class BasePage {
 
     public void senkeys(By by,String content){
         driver.findElement(by).sendKeys(content);
+    }
+
+    public int getWidth(double v) {
+        int weight=driver.manage().window().getSize().width;
+        return (int) (weight*v);
+    }
+
+    public int getHeight(double v) {
+        int height=driver.manage().window().getSize().height;
+        return (int) (height*v);
+    }
+
+    public void swipedown(){
+        new TouchAction(driver).press(PointOption.point(getWidth(0.5), getHeight(0.8))).waitAction().moveTo(PointOption.point(getWidth(0.5),getHeight(0.2))).release().perform();
     }
 
 }
